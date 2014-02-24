@@ -1,11 +1,4 @@
-// HTTPServer.cpp : �ܼ� ���� ���α׷��� ���� �������� �����մϴ�.
-//
-
-#include "stdafx.h"
-
-
-#include <WinSock2.h>
-#include <Windows.h>
+﻿#include "stdafx.h"
 
 #include <functional>
 #include <string>
@@ -32,14 +25,14 @@ bool HttpServer::onConnect(ClientData &client){
 		char buf[128+1];
 		int length = recv(client.socket, buf, 128, false);
 
-		/* Ŭ���̾�Ʈ�κ��� ���� ���� */
+		/* 클라이언트로부터 연결 끊김 */
 		if( length == -1 ) break;
 
 		buf[length] = '\0';
 
 		request += buf;
 
-		/* \r\n\r\n ���� -> ���� ���� */
+		/* \r\n\r\n 수신 -> 수신 종료 */
 		if( !strcmp(
 				request.c_str() + (request.length()-4),
 				"\r\n\r\n") ){
@@ -89,7 +82,7 @@ bool HttpServer::parseRequest(const string &_request){
 
 	request.assign( _request );
 
-	/* ���� �Ľ� */
+	/* 헤더 파싱 */
 	while( regex_search( request, match, expr ) ){
 		string &key = match[1].str();
 		string &value = match[2].str();
