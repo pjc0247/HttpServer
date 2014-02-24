@@ -32,6 +32,7 @@ public:
 	virtual ~HttpServer();
 
 	virtual bool onConnect(ClientData &client);
+
 	virtual bool parseRequest(const std::string &request);
 	virtual bool parseOption(
 		const std::string &option,const std::string &value,

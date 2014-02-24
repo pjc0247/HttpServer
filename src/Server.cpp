@@ -53,8 +53,10 @@ bool Server::setup(){
 	WSAStartup(MAKEWORD(2,2), &wsa);
 
 	socket = ::socket(PF_INET, SOCK_STREAM, 0);   
-	if(socket == INVALID_SOCKET)
+	if(socket == INVALID_SOCKET){
 		printError("socket error");
+		return false;
+	}
 
 	memset(&addr, 0, sizeof(addr));
 	addr.sin_family=AF_INET;
@@ -62,12 +64,16 @@ bool Server::setup(){
 	addr.sin_port=htons(port);
 
 	/* bind */
-	if(::bind(socket, (SOCKADDR*) &addr, sizeof(addr))==SOCKET_ERROR)
+	if(::bind(socket, (SOCKADDR*) &addr, sizeof(addr))==SOCKET_ERROR){
 		printError("bind error");
+		return false;
+	}
 
 	/* listen */
-	if(listen(socket, 5)==SOCKET_ERROR)
+	if(listen(socket, 5)==SOCKET_ERROR){
 		printError("listen error");
+		return false;
+	}
 
 	return true;
 }
@@ -77,7 +83,8 @@ void Server::cleanup(){
 
 void Server::run(){
 	if( !setup() ){
-
+		printError("setup failed");
+		return;
 	}
 	
 	while( true ){
@@ -100,11 +107,4 @@ void Server::run(){
 			{client, clientAddr};
 		workers.enqueue( cdata );
 	}
-}
-
-bool Server::onConnect(ClientData &client){
-	return true;
-}
-bool Server::onRequest(string request){
-	return true;
 }

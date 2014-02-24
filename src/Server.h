@@ -21,8 +21,7 @@ public:
 	virtual void run();
 
 protected:
-	virtual bool onConnect(ClientData &client);
-	virtual bool onRequest(std::string request);
+	virtual bool onConnect(ClientData &client) = 0;
 
 	virtual bool setup();
 	virtual void cleanup();
