@@ -1,4 +1,4 @@
-// HTTPServer.cpp : ÄÜ¼Ö ÀÀ¿ë ÇÁ·Î±×·¥¿¡ ´ëÇÑ ÁøÀÔÁ¡À» Á¤ÀÇÇÕ´Ï´Ù.
+// HTTPServer.cpp : ï¿½Ü¼ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Î±×·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
 //
 
 #include "stdafx.h"
@@ -32,14 +32,14 @@ bool HttpServer::onConnect(ClientData &client){
 		char buf[128+1];
 		int length = recv(client.socket, buf, 128, false);
 
-		/* Å¬¶óÀÌ¾ðÆ®·ÎºÎÅÍ ¿¬°á ²÷±è */
+		/* Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ®ï¿½Îºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ */
 		if( length == -1 ) break;
 
 		buf[length] = '\0';
 
 		request += buf;
 
-		/* \r\n\r\n ¼ö½Å -> ¼ö½Å Á¾·á */
+		/* \r\n\r\n ï¿½ï¿½ï¿½ï¿½ -> ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ */
 		if( !strcmp(
 				request.c_str() + (request.length()-4),
 				"\r\n\r\n") ){
@@ -89,7 +89,7 @@ bool HttpServer::parseRequest(const string &_request){
 
 	request.assign( _request );
 
-	/* Çì´õ ÆÄ½Ì */
+	/* ï¿½ï¿½ï¿½ï¿½ ï¿½Ä½ï¿½ */
 	while( regex_search( request, match, expr ) ){
 		string &key = match[1].str();
 		string &value = match[2].str();
