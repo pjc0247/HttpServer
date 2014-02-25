@@ -3,8 +3,15 @@
 
 using namespace std;
 
-Server::Server(int _port) :
-	workers(3, bind(&Server::onConnect, this, placeholders::_1) ){
+Server::Server(int port){
+	int nWorkers;
+
+	nWorkers = std::thread::hardware_concurrency() * 2 - 1;
+
+	this->Server::Server( nWorkers, port );
+}
+Server::Server(int workers, int _port) :
+	workers(workers, bind(&Server::onConnect, this, placeholders::_1) ){
 
 	socket = 0;
 	totalIn = totalOut = 0;
@@ -42,6 +49,9 @@ int Server::recv(SOCKET sock,void *data,unsigned int length, bool complete){
 
 	return received;
 }
+void Server::close(SOCKET socket){
+	::closesocket( socket );
+}
 
 void Server::getIOStatus(unsigned long *in,unsigned long *out){
 	if( in != nullptr ) *in = totalIn;
@@ -70,7 +80,7 @@ bool Server::setup(){
 	}
 
 	/* listen */
-	if(listen(socket, 5)==SOCKET_ERROR){
+	if(::listen(socket, 5)==SOCKET_ERROR){
 		printError("listen error");
 		return false;
 	}

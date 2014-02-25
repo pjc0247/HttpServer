@@ -38,7 +38,7 @@ void Monitor::monitor(){
 
 		target.getIOStatus(&in,&out);
 
-		printf("in : %5d / out : %5d\n",
+		printf("[] in : %5d / out : %5d\n",
 			in, out);
 
 		this_thread::sleep_for(

@@ -35,6 +35,7 @@ int HttpServer::sendString(SOCKET socket, const string &str){
 
 	sent = ::send(socket, (char*)str.c_str(), str.length(), 0);
 
+	totalOut += sent;
 	return sent;
 }
 
@@ -60,7 +61,7 @@ bool HttpServer::onConnect(ClientData &client){
 		}
 	}
 
-	printf("\n\n%s|\n", request.c_str());
+	//printf("\n\n%s|\n", request.c_str());
 
 	parseRequest(request);
 
@@ -91,7 +92,7 @@ bool HttpServer::parseOption(
 		dest = &header.acceptLanguage;
 
 	if( dest != nullptr ){
-		dest->assign( value );
+		*dest = move( value );
 		return true;
 	}
 	else return false;
@@ -103,8 +104,7 @@ bool HttpServer::parseRequest(const string &_request){
 
 	HttpRequest header;
 
-
-	request.assign( _request );
+	request = move( _request );
 
 	/* 헤더 파싱 */
 	while( regex_search( request, match, expr ) ){
@@ -146,6 +146,9 @@ string HttpServer::compileHeader(HttpResponse &response){
 	_ultoa( response.contentLength, contentLength, 10 );
 	header += "Content-length:" + string(contentLength) + CrLf;
 
+	/* Connection */
+	header += "Connection:" + response.connectionType + CrLf;
+
 
 	/* CrLf */
 	header += CrLf;
@@ -163,17 +166,20 @@ bool HttpServer::sendResponse(
 	response.contentLength = document.length();
 	response.status = HttpResponseCode::StatusOk;
 	response.version = HttpVersion11;
+	response.connectionType = "close";
 
 	auto &header = compileHeader(response);
 
 	sendString( socket, header );
 	sendString( socket, document );
 
+	close( socket );
+
 	return true;
 }
 
 void HttpServer::setServerName(const string &_serverName){
-	serverName.assign( _serverName );
+	serverName = move( _serverName );
 }
 string &HttpServer::getServerName(){
 	return serverName;

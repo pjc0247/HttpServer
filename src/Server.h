@@ -14,6 +14,7 @@ struct ClientData{
 class Server{
 public:
 	Server(int port);
+	Server(int workers, int port);
 	virtual ~Server();
 
 	void getIOStatus(unsigned long *in,unsigned long *out);
@@ -28,6 +29,8 @@ protected:
 
 	virtual int send(SOCKET sock,void *data,unsigned int length);
 	virtual int recv(SOCKET sock,void *data,unsigned int length, bool complete=true);
+
+	virtual void close(SOCKET sock);
 
 	virtual void printError(const char *msg);
 

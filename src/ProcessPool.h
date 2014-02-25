@@ -1,5 +1,5 @@
-#ifndef PROCESS_POOL_H
-#define PROCESS_POOL_H
+#ifndef _PROCESS_POOL_H
+#define _PROCESS_POOL_H
 
 #include <thread>
 #include <functional>
@@ -15,6 +15,8 @@ public:
 	typedef std::thread				worker_t;
 	typedef std::unique_lock<std::mutex> lock_t;
 
+	ProcessPool(){
+	}
 	ProcessPool(int nWorkers, handler_t handler){
 		createWorkers( nWorkers, handler );
 	}
@@ -62,6 +64,8 @@ protected:
 		workers.clear();
 		quit = true;
 	}
+	void flush(){
+	}
 
 protected:
 	std::list<worker_t> workers;
@@ -73,4 +77,4 @@ protected:
 	bool quit;
 };
 
-#endif // PROCESS_POOL_H
+#endif // _PROCESS_POOL_H
