@@ -9,13 +9,33 @@
 #include "Server.h"
 #include "HttpServer.h"
 
+#include "ReasonPhraseTable.h"
+
 using namespace std;
+
+const char DoubleCrLf[] = "\r\n\r\n";
+const char CrLf[] = "\r\n";
 
 HttpServer::HttpServer(int port) :
 	Server(port) {
 
+	this->HttpServer::HttpServer( "TinyHttpServer", port );
+}
+HttpServer::HttpServer(
+	const string &serverName, int port) :
+	Server(port) {
+
+	setServerName( serverName );
 }
 HttpServer::~HttpServer(){
+}
+
+int HttpServer::sendString(SOCKET socket, const string &str){
+	int sent;
+
+	sent = ::send(socket, (char*)str.c_str(), str.length(), 0);
+
+	return sent;
 }
 
 bool HttpServer::onConnect(ClientData &client){
@@ -35,7 +55,7 @@ bool HttpServer::onConnect(ClientData &client){
 		/* \r\n\r\n 수신 -> 수신 종료 */
 		if( !strcmp(
 				request.c_str() + (request.length()-4),
-				"\r\n\r\n") ){
+				DoubleCrLf) ){
 			break;
 		}
 	}
@@ -43,6 +63,10 @@ bool HttpServer::onConnect(ClientData &client){
 	printf("\n\n%s|\n", request.c_str());
 
 	parseRequest(request);
+
+	sendResponse( 
+		client.socket,
+		HttpResponseCode::StatusOk, "okhello" );
 
 	return true;
 }
@@ -98,4 +122,59 @@ bool HttpServer::parseRequest(const string &_request){
 	}
 
 	return true;
+}
+
+string HttpServer::compileHeader(HttpResponse &response){
+	string header;
+
+	ReasonPhraseTable *ptable = ReasonPhraseTable::getInstance();
+
+	char status[8];
+	_itoa( response.status, status, 10 );
+
+	/* HttpVer / StatusCode / ReasonPhrase */
+	header += response.version + " ";
+	header += string(status) + " ";
+	header += ptable->getPhrase(response.status) + CrLf;
+	
+
+	/* Server */
+	header += "Server:" + response.server + CrLf;
+
+	/* Content-length */
+	char contentLength[32];
+	_ultoa( response.contentLength, contentLength, 10 );
+	header += "Content-length:" + string(contentLength) + CrLf;
+
+
+	/* CrLf */
+	header += CrLf;
+
+	return header;
+}
+bool HttpServer::sendResponse(
+	SOCKET socket,
+	HttpResponseCode code, const string &document){
+
+
+	HttpResponse response;
+
+	response.server = getServerName();
+	response.contentLength = document.length();
+	response.status = HttpResponseCode::StatusOk;
+	response.version = HttpVersion11;
+
+	auto &header = compileHeader(response);
+
+	sendString( socket, header );
+	sendString( socket, document );
+
+	return true;
+}
+
+void HttpServer::setServerName(const string &_serverName){
+	serverName.assign( _serverName );
+}
+string &HttpServer::getServerName(){
+	return serverName;
 }

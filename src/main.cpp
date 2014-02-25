@@ -8,6 +8,7 @@ int main(int argc,char **argb){
 	Monitor *monitor = new Monitor(*server);
 
 	monitor->start();
+
 	server->run();
 
 	return 0;
