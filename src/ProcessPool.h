@@ -13,7 +13,6 @@ class ProcessPool{
 public:
 	typedef std::function<bool(T)>	handler_t;
 	typedef std::thread				worker_t;
-	typedef std::unique_lock<std::mutex> lock_t;
 
 	ProcessPool(){
 	}
@@ -25,9 +24,9 @@ public:
 	}
 
 	void enqueue(T workItem){
-		lock_t lock(queueMutex);
+		std::unique_lock<std::mutex> guard(queueMutex);
 			qWork.push( workItem );
-		lock.unlock();
+		guard.unlock();
 
 		signal.notify_one();
 	}
@@ -43,13 +42,13 @@ protected:
 					T workItem;
 					bool result;
 
-					lock_t lock( queueMutex );
+					std::unique_lock<std::mutex> guard( queueMutex );
 						while( qWork.empty() )
 							signal.wait(lock);
 
 						workItem = qWork.front();
 						qWork.pop();
-					lock.unlock();
+					guard.unlock();
 
 					result = handler( workItem );
 				}})

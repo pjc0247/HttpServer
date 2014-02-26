@@ -16,7 +16,7 @@ public:
 		auto ptr = instance.load();
 
 		if( ptr == nullptr ){
-			std::lock_guard<std::mutex> guard(lock);
+			std::lock_guard<std::mutex> guard( lock );
 
 			ptr = instance.load();
 			if( ptr == nullptr ){
