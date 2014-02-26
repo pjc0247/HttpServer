@@ -3,21 +3,6 @@
 
 using namespace std;
 
-Encoding *Encoding::instance = nullptr;
-
-Encoding *Encoding::getInstance(){
-	if( instance == nullptr ){
-		instance = new Encoding();
-	}
-	return instance;
-}
-void Encoding::releaseInstance(){
-	if( instance != nullptr ){
-		delete instance;
-		instance = nullptr;
-	}
-}
-
 Encoding::Encoding(){
 }
 Encoding::~Encoding(){

@@ -5,21 +5,7 @@
 
 using namespace std;
 
-ReasonPhraseTable *ReasonPhraseTable::instance = nullptr;
 string ReasonPhraseTable::novalue = "NoValue";
-
-ReasonPhraseTable *ReasonPhraseTable::getInstance(){
-	if( instance == nullptr ){
-		instance = new ReasonPhraseTable();
-	}
-	return instance;
-}
-void ReasonPhraseTable::releaseInstance(){
-	if( instance != nullptr ){
-		delete instance;
-		instance = nullptr;
-	}
-}
 
 ReasonPhraseTable::ReasonPhraseTable(){
 	initialize();

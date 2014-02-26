@@ -3,26 +3,27 @@
 
 #include <map>
 
+#include "ThreadSafeSingleton.h"
+
 enum HttpResponseCode;
 
-class ReasonPhraseTable{
-public:
-	static ReasonPhraseTable *getInstance();
-	static void releaseInstance();
+class ReasonPhraseTable : public ThreadSafeSingleton<ReasonPhraseTable>{
+private:
+	friend ThreadSafeSingleton;
 
-	static ReasonPhraseTable *instance;
+	ReasonPhraseTable();
+	virtual ~ReasonPhraseTable();
 
 public:
 	std::string &getPhrase(HttpResponseCode status);
 
-	static std::string novalue;
-
-private:
-	ReasonPhraseTable();
-	virtual ~ReasonPhraseTable();
-
+protected:
 	void insert(HttpResponseCode status,const std::string &phrase);
 	bool initialize();
+
+
+public:
+	static std::string novalue;
 
 protected:
 	std::map<HttpResponseCode, std::string> table;

@@ -3,14 +3,12 @@
 
 #include <string>
 
-class Encoding{
-public:
-	static Encoding *getInstance();
-	static void releaseInstance();
+#include "ThreadSafeSingleton.h"
 
-	static Encoding *instance;
+class Encoding : public ThreadSafeSingleton<Encoding>{
+private:
+	friend ThreadSafeSingleton;
 
-protected:
 	Encoding();
 	virtual ~Encoding();
 
