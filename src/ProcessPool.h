@@ -42,13 +42,15 @@ protected:
 					T workItem;
 					bool result;
 
-					std::unique_lock<std::mutex> guard( queueMutex );
+					{
+						std::unique_lock<std::mutex> guard( queueMutex );
 						while( qWork.empty() )
-							signal.wait(lock);
+							signal.wait( guard );
 
 						workItem = qWork.front();
 						qWork.pop();
-					guard.unlock();
+						guard.unlock();
+					}
 
 					result = handler( workItem );
 				}})
@@ -62,8 +64,6 @@ protected:
 
 		workers.clear();
 		quit = true;
-	}
-	void flush(){
 	}
 
 protected:
