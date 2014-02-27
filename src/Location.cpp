@@ -16,6 +16,20 @@ Location::Location(const string &_requestURI) :
 Location::~Location(){
 }
 
+void Location::setParameter(
+	const string &key,const string &value){
+
+	parameters[ key ] = value;
+}
+const string &Location::getParameter(const string &key){
+	auto &it = parameters.find( key );
+
+	if( it == parameters.end() )
+		return string("");
+	
+	return parameters[ key ];
+}
+
 bool Location::parseQueryString(const string &_query){
 	const regex expr("([^&]+)=([^&]+)");
 	smatch match;
@@ -33,10 +47,10 @@ bool Location::parseQueryString(const string &_query){
 		string &key = match[1].str();
 		string &value = match[2].str();
 		
-		parameters[ key ] = value;
+		setParameter(key, value);
 		printf("%s / %s\n", key.c_str(), value.c_str());
 		
-		query = match.suffix().str();
+		query = move( match.suffix().str() );
 	}
 
 	return true;
@@ -52,11 +66,13 @@ bool Location::parse(){
 		
 		location.push_back( f );
 		
-		uri = match.suffix().str();
+		uri = move( match.suffix().str() );
 	}
 
-	parseQueryString(
-		*location.rbegin() );
+	if( !location.empty() ){
+		parseQueryString(
+			*location.rbegin() );
+	}
 	
 	return true;
 }

@@ -11,9 +11,14 @@ public:
 	Location(const std::string &requestURI);
 	virtual ~Location();
 
+	const std::string &getParameter(const std::string &key);
+
 protected:
 	bool parseQueryString(const std::string &query);
 	bool parse();
+
+	void setParameter(
+		const std::string &key,const std::string &value);
 
 protected:
 	std::string requestURI;
