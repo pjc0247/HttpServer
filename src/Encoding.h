@@ -5,6 +5,8 @@
 
 #include "ThreadSafeSingleton.h"
 
+typedef std::basic_string<unsigned char> utf8string;
+
 class Encoding : public ThreadSafeSingleton<Encoding>{
 private:
 	friend ThreadSafeSingleton;
@@ -14,8 +16,11 @@ private:
 
 public:
 	//http://www.silverwolf.co.kr/4890
+	utf8string encodeUTF8(const std::string &str);
+	std::string decodeUTF8(const utf8string &str);
+
+	std::string encodeURL(const utf8string &str);
 	std::string decodeURL(const std::string &str);
-	std::string encodeURL(const std::string &str);
 };
 
 #endif //_ENCODING_H
