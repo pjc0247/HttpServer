@@ -4,34 +4,15 @@
 #include <string>
 
 #include "Server.h"
+
 #include "HttpProtocol.h"
+#include "HttpResponse.h"
+#include "HttpRequest.h"
+
+#include "Location.h"
 
 struct ClientData;
-
-
-struct HttpRequest{
-	HttpMethod method;
-
-	std::string version;
-	std::string location;
-	//Location location;
-
-	std::string host;
-	std::string connection;
-	std::string accept;
-	std::string userAgent;
-	std::string acceptEncoding;
-	std::string acceptLanguage;
-};
-struct HttpResponse{
-	HttpResponseCode status;
-
-	std::string version;
-	std::string server;
-	std::string connectionType;
-
-	unsigned long contentLength;
-};
+class Handler;
 
 class HttpServer : public Server{
 public:
