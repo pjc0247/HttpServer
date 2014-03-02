@@ -4,6 +4,9 @@
 #include <string>
 #include <vector>    
 #include <unordered_map>
+#include <forward_list>
+
+typedef std::vector<std::string>::const_iterator LocationIterator;
 
 class Location{
 public:
@@ -12,6 +15,19 @@ public:
 	virtual ~Location();
 
 	const std::string &getParameter(const std::string &key);
+	const std::string &getLocation();
+
+	const LocationIterator getIterator();
+	const LocationIterator getEnd();
+
+	// inlining
+	const LocationIterator cbegin(){
+		return getIterator();
+	};
+	const LocationIterator cend(){
+		return getEnd();
+	}
+	
 
 protected:
 	bool parseQueryString(const std::string &query);
@@ -19,6 +35,8 @@ protected:
 
 	void setParameter(
 		const std::string &key,const std::string &value);
+	void setLocation(
+		const std::string &location);
 
 protected:
 	std::string requestURI;
