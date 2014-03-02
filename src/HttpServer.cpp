@@ -8,6 +8,7 @@
 
 #include "Server.h"
 #include "HttpServer.h"
+#include "Location.h"
 
 #include "ReasonPhraseTable.h"
 
@@ -61,7 +62,7 @@ bool HttpServer::onConnect(ClientData &client){
 		}
 	}
 
-	//printf("\n\n%s|\n", request.c_str());
+	printf("\n\n%s|\n", request.c_str());
 
 	parseRequest(request);
 
@@ -105,6 +106,35 @@ bool HttpServer::parseRequest(const string &_request){
 	HttpRequest header;
 
 	request = move( _request );
+
+	/* Method Location HttpVer */
+	vector<string> token;
+	auto &start = request.begin();
+	for(auto &it=request.begin();it!=request.end();++it){
+		if( *it == ' ' || *it == '\r' ){
+			string tmp;
+			copy( start, it, back_inserter( tmp ) );
+			token.push_back( tmp );
+
+			start = ++it;
+		}
+		if( *it == '\n' )
+			break;
+	}
+
+	auto &method = token[0];
+	transform( method.begin(),method.end(), method.begin(), ::tolower );
+
+	if( method == "get" ) 
+		header.method = HttpMethod::HttpGet;
+	else if( method == "post" ) 
+		header.method = HttpMethod::HttpPost;
+
+	auto &location = token[1];
+ 	header.location = new Location( location );
+
+	auto &httpver = token[2];
+	header.version = move( httpver );
 
 	/* 헤더 파싱 */
 	while( regex_search( request, match, expr ) ){
