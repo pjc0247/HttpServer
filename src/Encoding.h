@@ -16,7 +16,6 @@ private:
 	virtual ~Encoding();
 
 public:
-	//http://www.silverwolf.co.kr/4890
 	utf8string encodeUTF8(const std::string &str);
 	std::string decodeUTF8(const utf8string &str);
 
