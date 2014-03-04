@@ -1,0 +1,7 @@
+#ifndef _CONFIG_WIN32_H
+#define _CONFIG_WIN32_H
+
+
+#define WS_VERSION MAKEWORD(2,2)
+
+#endif //_CONFIG_WIN32_H
