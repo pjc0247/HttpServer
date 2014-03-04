@@ -1,6 +1,9 @@
 ﻿#include "stdafx.h"
 #include "Server.h"
 
+#include "Config.h"
+#include "Config_win32.h"
+
 using namespace std;
 
 Server::Server(int port){
@@ -59,8 +62,11 @@ void Server::getIOStatus(unsigned long *in,unsigned long *out){
 }
 
 bool Server::setup(){
+
+#ifdef TARGET_WIN32
 	WSAData wsa;
-	WSAStartup(MAKEWORD(2,2), &wsa);
+	WSAStartup(WS_VERSION, &wsa);
+#endif
 
 	socket = ::socket(PF_INET, SOCK_STREAM, 0);   
 	if(socket == INVALID_SOCKET){
@@ -88,7 +94,10 @@ bool Server::setup(){
 	return true;
 }
 void Server::cleanup(){
+
+#ifdef TARGET_WIN32
 	WSACleanup();
+#endif
 }
 
 void Server::run(){
