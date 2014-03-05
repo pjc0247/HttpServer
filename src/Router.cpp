@@ -19,10 +19,13 @@ void Router::link(string &&path, Router *router){
 	routes[ path ] = router;
 }
 
-bool Router::route(HttpRequest &request){
-	//std::string &path = request.location->
+bool Router::route(LocationIterator &it,HttpRequest &request){
+	auto &pair = routes.find(*it);
 
-	//routes.find(
+	if( pair == routes.end() )
+		return false;
+
+	pair->second->route(++it, request);
 
 	return true;
 }

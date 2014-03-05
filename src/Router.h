@@ -6,6 +6,7 @@
 #include <string>
 
 #include "Handler.h"
+#include "Location.h"
 
 struct HttpRequest;
 struct HttpResponse;
@@ -18,21 +19,10 @@ public:
 	void link(std::string &path, Router *router);
 	void link(std::string &&path, Router *router);
 
-	bool route(HttpRequest &request);
+	bool route(LocationIterator &it, HttpRequest &request);
+
 protected:
 	std::unordered_map<std::string,Router*> routes;
 };
 
-#endif //_HANDLER_H
-
-/*
-class Handler{
-	void handle(){
-		
-	}
-
-	void on_index(){
-
-	}
-};
-*/
+#endif
