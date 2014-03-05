@@ -41,7 +41,10 @@ protected:
 protected:
 	std::string requestURI;
 
-	std::vector<std::string> location;
+	std::string location;
+	std::string queryString;
+
+	std::vector<std::string> dirs;
 	std::unordered_map<std::string,std::string> parameters;
 };
 
