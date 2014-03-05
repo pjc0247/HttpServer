@@ -38,10 +38,10 @@ const std::string &Location::getLocation(){
 }
 
 const LocationIterator Location::getIterator(){
-	return location.cbegin();
+	return dirs.cbegin();
 }
 const LocationIterator Location::getEnd(){
-	return location.cend();
+	return dirs.cend();
 }
 
 bool Location::parseQueryString(const string &_query){
@@ -77,15 +77,20 @@ bool Location::parse(){
 	while( regex_search( uri, match, expr ) ){
 		string &f = match[0].str();
 		
-		location.push_back( f );
+		dirs.push_back( f );
 
 		uri = match.suffix().str();
 	}
 
-	if( !location.empty() ){
+	auto &last = *(dirs.rbegin());
+	auto qidx = last.find('?');
+
+	if( qidx != string::npos ){
+		queryString = last.substr( qidx );
+
 		parseQueryString(
-			*(location.rbegin()) );
+			*(dirs.rbegin()) );
 	}
-	
+
 	return true;
 }
