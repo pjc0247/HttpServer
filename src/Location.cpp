@@ -30,11 +30,10 @@ const string &Location::getParameter(const string &key){
 	return parameters[ key ];
 }
 void Location::setLocation(const std::string &_location){
-//	location = move( _location );
+	location = _location;
 }
 const std::string &Location::getLocation(){
-	//return location;
-	return requestURI;
+	return location;
 }
 
 const LocationIterator Location::getIterator(){
