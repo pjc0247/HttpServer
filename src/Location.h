@@ -17,15 +17,21 @@ public:
 	const std::string &getParameter(const std::string &key);
 	const std::string &getLocation();
 
-	const LocationIterator getIterator();
-	const LocationIterator getEnd();
+	LocationIterator getIterator();
+	LocationIterator getEnd();
 
 	// inlining
 	const LocationIterator cbegin(){
-		return getIterator();
+		return dirs.cbegin();
 	};
 	const LocationIterator cend(){
-		return getEnd();
+		return dirs.cend();
+	}
+	LocationIterator begin(){
+		return dirs.begin();
+	};
+	LocationIterator end(){
+		return dirs.cend();
 	}
 	
 
