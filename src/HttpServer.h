@@ -48,7 +48,7 @@ protected:
 
 protected:
 	std::string serverName;
-	std::atomic_uint32_t requestCounter;
+	std::atomic<unsigned int> requestCounter;
 
 	Router rootRouter;
 };
