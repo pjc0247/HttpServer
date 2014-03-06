@@ -2,7 +2,6 @@
 #include "Server.h"
 
 #include "Config.h"
-#include "Config_win32.h"
 
 using namespace std;
 
@@ -13,8 +12,8 @@ Server::Server(int port){
 
 	this->Server::Server( nWorkers, port );
 }
-Server::Server(int workers, int _port) :
-	workers(workers, bind(&Server::onConnect, this, placeholders::_1) ){
+Server::Server(int nWorkers, int _port) :
+	workers(nWorkers, bind(&Server::onConnect, this, placeholders::_1) ){
 
 	socket = 0;
 	totalIn = totalOut = 0;
@@ -60,6 +59,9 @@ void Server::getIOStatus(unsigned long *in,unsigned long *out){
 	if( in != nullptr ) *in = totalIn;
 	if( out != nullptr ) *out = totalOut;
 }
+void Server::setopt(int level,int name,const char *value,int len){
+	setsockopt( socket, level, name, value, len);
+}
 
 bool Server::setup(){
 
@@ -79,8 +81,12 @@ bool Server::setup(){
 	addr.sin_addr.s_addr=htonl(INADDR_ANY);
 	addr.sin_port=htons(port);
 
+	int optval = 1;
+    setsockopt(socket, SOL_SOCKET, SO_REUSEADDR, (char*)&optval, sizeof(optval));
+
+
 	/* bind */
-	if(::bind(socket, (SOCKADDR*) &addr, sizeof(addr))==SOCKET_ERROR){
+	if(::bind(socket, (SOCKADDR*)&addr, sizeof(addr))==SOCKET_ERROR){
 		printError("bind error");
 		return false;
 	}
@@ -94,6 +100,7 @@ bool Server::setup(){
 	return true;
 }
 void Server::cleanup(){
+	close( socket );
 
 #ifdef TARGET_WIN32
 	WSACleanup();

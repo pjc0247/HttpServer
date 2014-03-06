@@ -14,12 +14,13 @@ struct ClientData{
 class Server{
 public:
 	Server(int port);
-	Server(int workers, int port);
+	Server(int nWorkers, int port);
 	virtual ~Server();
 
 	void getIOStatus(unsigned long *in,unsigned long *out);
 
 	virtual void run();
+	virtual void setopt(int level,int name,const char *value,int len);
 
 protected:
 	virtual bool onConnect(ClientData &client) = 0;
