@@ -71,7 +71,7 @@ bool Server::setup(){
 #endif
 
 	socket = ::socket(PF_INET, SOCK_STREAM, 0);   
-	if(socket == INVALID_SOCKET){
+	if( socket == 0 ){
 		printError("socket error");
 		return false;
 	}
@@ -86,13 +86,13 @@ bool Server::setup(){
 
 
 	/* bind */
-	if(::bind(socket, (SOCKADDR*)&addr, sizeof(addr))==SOCKET_ERROR){
+	if( ::bind(socket, (SOCKADDR*)&addr, sizeof(addr)) == -1 ){
 		printError("bind error");
 		return false;
 	}
 
 	/* listen */
-	if(::listen(socket, 5)==SOCKET_ERROR){
+	if( ::listen(socket, 5) == -1 ){
 		printError("listen error");
 		return false;
 	}
@@ -122,7 +122,7 @@ void Server::run(){
 
 		/* accept */
 		client = accept(socket, (SOCKADDR*)&clientAddr, &clientAddrSize);
-		if(client==INVALID_SOCKET)
+		if( client == 0 )
 			printError("accept error");
 
 		/*
