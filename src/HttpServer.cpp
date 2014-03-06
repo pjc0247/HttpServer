@@ -18,7 +18,7 @@ const char DoubleCrLf[] = "\r\n\r\n";
 const char CrLf[] = "\r\n";
 
 HttpServer::HttpServer(int port){
-
+	 
 	this->HttpServer::HttpServer( "TinyHttpServer", port );
 }
 HttpServer::HttpServer(
@@ -175,7 +175,7 @@ string HttpServer::compileHeader(HttpResponse &response){
 
 	/* Content-length */
 	char contentLength[32];
-	printf(contentLength, "%ul", response.contentLength);
+	sprintf(contentLength, "%ul", response.contentLength);
 	header += "Content-length:" + string(contentLength) + CrLf;
 
 	/* Connection */
