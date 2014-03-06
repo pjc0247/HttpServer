@@ -52,7 +52,12 @@ int Server::recv(SOCKET sock,void *data,unsigned int length, bool complete){
 	return received;
 }
 void Server::close(SOCKET socket){
+
+#ifdef TARGET_WIN32
 	::closesocket( socket );
+#else
+	::close( socket );
+#endif
 }
 
 void Server::getIOStatus(unsigned long *in,unsigned long *out){
