@@ -163,7 +163,7 @@ string HttpServer::compileHeader(HttpResponse &response){
 	ReasonPhraseTable *ptable = ReasonPhraseTable::getInstance();
 
 	char status[8];
-	_itoa( response.status, status, 10 );
+	sprintf(status, "%d", response.status);
 
 	/* HttpVer / StatusCode / ReasonPhrase */
 	header += response.version + " ";
@@ -176,7 +176,7 @@ string HttpServer::compileHeader(HttpResponse &response){
 
 	/* Content-length */
 	char contentLength[32];
-	_ultoa( response.contentLength, contentLength, 10 );
+	printf(contentLength, "%ul", response.contentLength);
 	header += "Content-length:" + string(contentLength) + CrLf;
 
 	/* Connection */
