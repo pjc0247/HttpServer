@@ -50,8 +50,8 @@ bool Location::parseQueryString(const string &_query){
 	std::string query = _query;
 	
 	while( regex_search( query, match, expr ) ){
-		string &key = match[1].str();
-		string &value = match[2].str();
+		string key = match[1].str();
+		string value = match[2].str();
 		
 		setParameter(key, value);
 		
@@ -75,7 +75,7 @@ bool Location::parse(){
 	}
 
 	while( regex_search( uri, match, expr ) ){
-		string &f = match[0].str();
+		string f = match[0].str();
 		
 		dirs.push_back( f );
 
