@@ -20,7 +20,7 @@ void Router::link(string &&path, Router *router){
 }
 
 bool Router::route(LocationIterator &it,HttpRequest &request){
-	auto &pair = routes.find(*it);
+	auto pair = routes.find(*it);
 
 	if( pair == routes.end() )
 		return false;
