@@ -23,7 +23,7 @@ public:
 	virtual void setopt(int level,int name,const char *value,int len);
 
 protected:
-	virtual bool onConnect(ClientData &client) = 0;
+	virtual bool onConnect(ClientData client) = 0;
 
 	virtual bool setup();
 	virtual void cleanup();

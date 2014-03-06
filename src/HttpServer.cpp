@@ -41,7 +41,7 @@ int HttpServer::sendString(SOCKET socket, const string &str){
 	return sent;
 }
 
-bool HttpServer::onConnect(ClientData &client){
+bool HttpServer::onConnect(ClientData client){
 	string request;
 
 	while( true ){
