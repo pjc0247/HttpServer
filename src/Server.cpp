@@ -121,12 +121,18 @@ void Server::run(){
 	while( true ){
 		SOCKADDR_IN clientAddr;
 		SOCKET client;
+
+#ifdef TARGET_WIN32
 		int clientAddrSize;
+#elif defined(TARGET_BSD)
+		socklen_t clientAddrSize;
+#endif
 
 		clientAddrSize = sizeof(clientAddr);
 
 		/* accept */
-		client = accept(socket, (SOCKADDR*)&clientAddr, &clientAddrSize);
+		client = ::accept(socket, (SOCKADDR*)&clientAddr, &clientAddrSize);
+
 		if( client == 0 )
 			printError("accept error");
 
