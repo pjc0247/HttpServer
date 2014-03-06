@@ -24,7 +24,8 @@ HttpServer::HttpServer(int port) :
 }
 HttpServer::HttpServer(
 	const string &serverName, int port) :
-	Server(port) {
+	Server(port), requestCounter(0),
+	rootRouter() {
 
 	setServerName( serverName );
 }
@@ -62,13 +63,15 @@ bool HttpServer::onConnect(ClientData &client){
 		}
 	}
 
-	printf("\n\n%s|\n", request.c_str());
+	//printf("\n\n%s|\n", request.c_str());
+
+	requestCounter.fetch_add(1);
 
 	parseRequest(request);
 
 	sendResponse( 
 		client.socket,
-		HttpResponseCode::StatusOk, "okhello" );
+		HttpResponseCode::StatusOk, "<h1>it works!</h1>" );
 
 	return true;
 }
@@ -213,4 +216,11 @@ void HttpServer::setServerName(const string &_serverName){
 }
 string &HttpServer::getServerName(){
 	return serverName;
+}
+unsigned int HttpServer::getRequestCount(){
+	unsigned int reqs = requestCounter.load();
+	return reqs;
+}
+Router &HttpServer::getRootRouter(){
+	return rootRouter;
 }
