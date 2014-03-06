@@ -111,8 +111,8 @@ bool HttpServer::parseRequest(const string &_request){
 
 	/* Method Location HttpVer */
 	vector<string> token;
-	auto &start = request.begin();
-	for(auto &it=request.begin();it!=request.end();++it){
+	auto start = request.begin();
+	for(auto it=request.begin();it!=request.end();++it){
 		if( *it == ' ' || *it == '\r' ){
 			string tmp;
 			copy( start, it, back_inserter( tmp ) );
@@ -200,7 +200,7 @@ bool HttpServer::sendResponse(
 	response.version = HttpVersion11;
 	response.connectionType = "close";
 
-	auto &header = compileHeader(response);
+	auto header = compileHeader(response);
 
 	sendString( socket, header );
 	sendString( socket, document );

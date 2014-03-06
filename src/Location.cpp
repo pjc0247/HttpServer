@@ -22,7 +22,7 @@ void Location::setParameter(
 	parameters[ key ] = value;
 }
 const string &Location::getParameter(const string &key){
-	auto &it = parameters.find( key );
+	auto it = parameters.find( key );
 
 	if( it == parameters.end() )
 		return string("");
