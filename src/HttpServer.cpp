@@ -17,8 +17,7 @@ using namespace std;
 const char DoubleCrLf[] = "\r\n\r\n";
 const char CrLf[] = "\r\n";
 
-HttpServer::HttpServer(int port) :
-	Server(port) {
+HttpServer::HttpServer(int port){
 
 	this->HttpServer::HttpServer( "TinyHttpServer", port );
 }
