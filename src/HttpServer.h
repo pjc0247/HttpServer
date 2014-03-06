@@ -2,6 +2,7 @@
 #define _HTTP_SERVER_H
 
 #include <string>
+#include <atomic>
 
 #include "Server.h"
 
@@ -10,6 +11,7 @@
 #include "HttpRequest.h"
 
 #include "Location.h"
+#include "Router.h"
 
 struct ClientData;
 class Handler;
@@ -25,8 +27,11 @@ public:
 	void setServerName(const std::string &name);
 	std::string &getServerName();
 
+	unsigned int getRequestCount();
+	Router &getRootRouter();
+
 protected:
-	virtual bool onConnect(ClientData &client);
+	virtual bool onConnect(ClientData client);
 
 	virtual int sendString(SOCKET socket, const std::string &str);
 
@@ -43,6 +48,9 @@ protected:
 
 protected:
 	std::string serverName;
+	std::atomic_uint32_t requestCounter;
+
+	Router rootRouter;
 };
 
 #endif //_HTTP_SERVER
