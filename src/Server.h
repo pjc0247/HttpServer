@@ -1,9 +1,9 @@
 #ifndef _SERVER_H
 #define _SERVER_H
 
-#include <winsock2.h>
 #include <string>
 
+#include "Config.h"
 #include "ProcessPool.h"
 
 struct ClientData{
