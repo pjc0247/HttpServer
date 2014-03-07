@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Encoding.h"
 
-#include <Windows.h>
+#include "Config.h"
 
 using namespace std;
 
@@ -13,6 +13,7 @@ Encoding::~Encoding(){
 utf8string Encoding::encodeUTF8(const string &str){
 	utf8string encoded;
 
+#ifnef TARGET_WIN32
 	int wstrlen = MultiByteToWideChar(CP_ACP, 0, str.c_str(),str.length(), NULL,NULL);
 	wchar_t *wstr = new wchar_t[wstrlen + 1];
 
@@ -28,12 +29,15 @@ utf8string Encoding::encodeUTF8(const string &str){
 
 	delete[] wstr;
 	delete[] cstr;
+#else
+#endif
 
 	return encoded;
 }
 string Encoding::decodeUTF8(const utf8string &str){
 	string decoded;
 
+#ifnef TARGET_WIN32
 	int wstrlen = MultiByteToWideChar(CP_UTF8, 0, (char *)str.c_str(),str.length(), NULL,NULL);
 	wchar_t *wstr = new wchar_t[wstrlen + 1];
 
@@ -49,6 +53,8 @@ string Encoding::decodeUTF8(const utf8string &str){
 
 	delete[] wstr;
 	delete[] cstr;
+#else
+#endif
 
 	return decoded;
 }
