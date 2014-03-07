@@ -12,16 +12,18 @@ Router::Router(){
 Router::~Router(){
 }
 
-void Router::link(string &path, Router *router){
-	link( move(path), router );
+Router &Router::link(string &path, Router *router){
+	return link( move(path), router );
 }
-void Router::link(string &&path, Router *router){
+Router &Router::link(string &&path, Router *router){
 	assert( router != nullptr );
 	assert( path.empty() == false );
 
 	routes[ path ] = router;
 
 	router->setParent( this );
+
+	return *router;
 }
 
 Router *Router::getParent(){
