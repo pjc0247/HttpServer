@@ -39,7 +39,7 @@ private:
 };
 
 template <typename T>
-std::atomic<T*> ThreadSafeSingleton<T>::instance = nullptr;
+std::atomic<T*> ThreadSafeSingleton<T>::instance;
 
 template <typename T>
 std::mutex ThreadSafeSingleton<T>::lock;
