@@ -26,6 +26,8 @@ Server::~Server(){
 }
 
 void Server::printError(const char *msg){
+	assert( msg != nullptr );
+
 	printf("%s\n", msg);
 }
 
@@ -37,6 +39,9 @@ int Server::send(SOCKET sock,void *data,unsigned int length){
 	return sent;
 }
 int Server::recv(SOCKET sock,void *data,unsigned int length, bool complete){
+	assert( data != nullptr );
+	assert( length > 0 );
+
 	int received = 0;
 
 	if( complete ){
@@ -67,6 +72,9 @@ void Server::getIOStatus(unsigned long *in,unsigned long *out){
 	if( out != nullptr ) *out = totalOut;
 }
 void Server::setopt(int level,int name,const char *value,int len){
+	assert( value != nullptr );
+	assert( len > 0 );
+
 	setsockopt( socket, level, name, value, len);
 }
 
@@ -90,7 +98,6 @@ bool Server::setup(){
 
 	int optval = 1;
     setsockopt(socket, SOL_SOCKET, SO_REUSEADDR, (char*)&optval, sizeof(optval));
-
 
 	/* bind */
 	if( ::bind(socket, (SOCKADDR*)&addr, sizeof(addr)) == -1 ){
