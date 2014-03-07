@@ -14,5 +14,8 @@
 #endif
 
 
+#define BACKLOG_SIZE 5
+#define INBUF_SIZE 64
+
 
 #endif //_CONFIG_H

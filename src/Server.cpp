@@ -5,6 +5,8 @@
 
 using namespace std;
 
+Server::Server(){
+}
 Server::Server(int port){
 	int nWorkers;
 
@@ -97,7 +99,7 @@ bool Server::setup(){
 	}
 
 	/* listen */
-	if( ::listen(socket, 5) == -1 ){
+	if( ::listen(socket, BACKLOG_SIZE) == -1 ){
 		printError("listen error");
 		return false;
 	}

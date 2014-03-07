@@ -12,6 +12,8 @@
 
 #include "ReasonPhraseTable.h"
 
+#include "Config.h"
+
 using namespace std;
 
 const char DoubleCrLf[] = "\r\n\r\n";
@@ -33,7 +35,7 @@ HttpServer::~HttpServer(){
 
 int HttpServer::sendString(SOCKET socket, const string &str){
 	int sent;
-
+	
 	sent = ::send(socket, (char*)str.c_str(), str.length(), 0);
 
 	totalOut += sent;
@@ -44,8 +46,8 @@ bool HttpServer::onConnect(ClientData client){
 	string request;
 
 	while( true ){
-		char buf[128+1];
-		int length = recv(client.socket, buf, 128, false);
+		char buf[INBUF_SIZE+1];
+		int length = recv(client.socket, buf, INBUF_SIZE, false);
 
 		/* 클라이언트로부터 연결 끊김 */
 		if( length == -1 ) break;
@@ -168,7 +170,7 @@ string HttpServer::compileHeader(HttpResponse &response){
 	header += response.version + " ";
 	header += string(status) + " ";
 	header += ptable->getPhrase(response.status) + CrLf;
-	
+
 
 	/* Server */
 	header += "Server:" + response.server + CrLf;
