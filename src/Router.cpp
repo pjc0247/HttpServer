@@ -16,7 +16,8 @@ void Router::link(string &path, Router *router){
 	link( move(path), router );
 }
 void Router::link(string &&path, Router *router){
-	assert(router != nullptr);
+	assert( router != nullptr );
+	assert( path.empty() == false );
 
 	routes[ path ] = router;
 
