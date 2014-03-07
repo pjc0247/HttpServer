@@ -68,12 +68,19 @@ bool HttpServer::onConnect(ClientData client){
 
 	requestCounter.fetch_add(1);
 
-	parseRequest(request);
+	//if( ! request.empty() ){
+	HttpRequest header;
+	parseRequest(request, header);
 
+	
 	sendResponse( 
 		client.socket,
 		HttpResponseCode::StatusOk, "<h1>it works!</h1>" );
-
+	//}
+	/*
+	rootRouter.route(
+		header.location->begin(), header );
+		*/ 
 	return true;
 }
 
@@ -102,14 +109,14 @@ bool HttpServer::parseOption(
 	}
 	else return false;
 }
-bool HttpServer::parseRequest(const string &_request){
+bool HttpServer::parseRequest(
+	const string &_request, HttpRequest &header){
+
 	regex expr("([a-zA-Z_-]*)\\s?:\\s?(.*)");
 	smatch match;
 	string request;
 
-	HttpRequest header;
-
-	request = move( _request );
+	request = _request;
 
 	/* Method Location HttpVer */
 	vector<string> token;
@@ -142,8 +149,8 @@ bool HttpServer::parseRequest(const string &_request){
 
 	/* 헤더 파싱 */
 	while( regex_search( request, match, expr ) ){
-		string &key = match[1].str();
-		string &value = match[2].str();
+		string key = match[1].str();
+		string value = match[2].str();
 
 		transform( key.begin(),key.end(),key.begin(), ::tolower );
 		
@@ -219,7 +226,9 @@ string &HttpServer::getServerName(){
 	return serverName;
 }
 unsigned int HttpServer::getRequestCount(){
-	unsigned int reqs = requestCounter.load();
+	unsigned int reqs = 
+		requestCounter.load( std::memory_order_acquire );
+
 	return reqs;
 }
 Router &HttpServer::getRootRouter(){
