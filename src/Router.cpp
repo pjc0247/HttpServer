@@ -16,14 +16,30 @@ void Router::link(string &path, Router *router){
 	link( move(path), router );
 }
 void Router::link(string &&path, Router *router){
+	assert(router != nullptr);
+
 	routes[ path ] = router;
+
+	router->setParent( this );
+}
+
+Router *Router::getParent(){
+	return parent;
+}
+void Router::setParent(Router *_parent){
+	parent = _parent;
 }
 
 bool Router::route(LocationIterator &it,HttpRequest &request){
+	if( it == request.location->end() ){
+		return false;
+	}
+
 	auto pair = routes.find(*it);
 
-	if( pair == routes.end() )
+	if( pair == routes.end() ){
 		return false;
+	}
 
 	pair->second->route(++it, request);
 

@@ -19,9 +19,16 @@ public:
 	void link(std::string &path, Router *router);
 	void link(std::string &&path, Router *router);
 
-	bool route(LocationIterator &it, HttpRequest &request);
+	virtual bool route(LocationIterator &it, HttpRequest &request);
+
+	Router *getParent();
 
 protected:
+	void setParent(Router *parent);
+
+protected:
+	Router *parent;
+
 	std::unordered_map<std::string,Router*> routes;
 };
 
