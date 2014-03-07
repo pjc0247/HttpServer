@@ -13,7 +13,7 @@ Encoding::~Encoding(){
 utf8string Encoding::encodeUTF8(const string &str){
 	utf8string encoded;
 
-#ifndef TARGET_WIN32
+#ifdef TARGET_WIN32
 	int wstrlen = MultiByteToWideChar(CP_ACP, 0, str.c_str(),str.length(), NULL,NULL);
 	wchar_t *wstr = new wchar_t[wstrlen + 1];
 
@@ -37,7 +37,7 @@ utf8string Encoding::encodeUTF8(const string &str){
 string Encoding::decodeUTF8(const utf8string &str){
 	string decoded;
 
-#ifndef TARGET_WIN32
+#ifdef TARGET_WIN32
 	int wstrlen = MultiByteToWideChar(CP_UTF8, 0, (char *)str.c_str(),str.length(), NULL,NULL);
 	wchar_t *wstr = new wchar_t[wstrlen + 1];
 
