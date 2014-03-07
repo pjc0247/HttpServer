@@ -8,9 +8,7 @@
 using namespace std;
 
 HttpMonitor::HttpMonitor(HttpServer *_target) :
-	target(_target) {
-
-	activated = false;
+	Monitor( _target) {
 }
 HttpMonitor::~HttpMonitor(){
 
