@@ -5,7 +5,12 @@
 
 class Location;
 
-struct HttpRequest{
+class HttpRequest{
+public:
+	HttpRequest();
+	virtual ~HttpRequest();
+
+protected:
 	HttpMethod method;
 
 	std::string version;
@@ -17,9 +22,6 @@ struct HttpRequest{
 	std::string userAgent;
 	std::string acceptEncoding;
 	std::string acceptLanguage;
-
-	HttpRequest();
-	virtual ~HttpRequest();
 };
 
 #endif //_HTTP_REQUEST_H
