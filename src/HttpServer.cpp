@@ -57,7 +57,8 @@ bool HttpServer::onConnect(ClientData client){
 		request += buf;
 
 		/* \r\n\r\n 수신 -> 수신 종료 */
-		if( !strcmp(
+		if( request.length() >= 4 &&
+			!strcmp(
 				request.c_str() + (request.length()-4),
 				DoubleCrLf) ){
 			break;
