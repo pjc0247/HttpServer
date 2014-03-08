@@ -70,10 +70,8 @@ bool HttpServer::onConnect(ClientData client){
 	requestCounter.fetch_add(1);
 
 	//if( ! request.empty() ){
-	HttpRequest header;
-	parseRequest(request, header);
+	HttpRequest header( request );
 
-	
 	sendResponse( 
 		client.socket,
 		HttpResponseCode::StatusOk, "<h1>it works!</h1>" );
@@ -82,87 +80,6 @@ bool HttpServer::onConnect(ClientData client){
 	rootRouter.route(
 		header.location->begin(), header );
 		*/ 
-	return true;
-}
-
-bool HttpServer::parseOption(
-	const string &key,const string &value,
-	HttpRequest &header){
-	
-	string *dest = nullptr;
-
-	if( key == "host" )
-		dest = &header.host;
-	else if( key == "connection" )
-		dest = &header.connection;
-	else if( key == "accept" )
-		dest = &header.accept;
-	else if( key == "user-agent" )
-		dest = &header.userAgent;
-	else if( key == "accept-encoding" )
-		dest = &header.acceptEncoding;
-	else if( key == "accept-language" )
-		dest = &header.acceptLanguage;
-
-	if( dest != nullptr ){
-		*dest = move( value );
-		return true;
-	}
-	else return false;
-}
-bool HttpServer::parseRequest(
-	const string &_request, HttpRequest &header){
-
-	regex expr("([a-zA-Z_-]*)\\s?:\\s?(.*)");
-	smatch match;
-	string request;
-
-	request = _request;
-
-	/* Method Location HttpVer */
-	vector<string> token;
-	auto start = request.begin();
-	for(auto it=request.begin();it!=request.end();++it){
-		if( *it == ' ' || *it == '\r' ){
-			string tmp;
-			copy( start, it, back_inserter( tmp ) );
-			token.push_back( tmp );
-
-			start = ++it;
-		}
-		if( *it == '\n' )
-			break;
-	}
-
-	auto &method = token[0];
-	transform( method.begin(),method.end(), method.begin(), ::tolower );
-
-	if( method == "get" ) 
-		header.method = HttpMethod::HttpGet;
-	else if( method == "post" ) 
-		header.method = HttpMethod::HttpPost;
-
-	auto &location = token[1];
- 	header.location = new Location( location );
-
-	auto &httpver = token[2];
-	header.version = move( httpver );
-
-	/* 헤더 파싱 */
-	while( regex_search( request, match, expr ) ){
-		string key = match[1].str();
-		string value = match[2].str();
-
-		transform( key.begin(),key.end(),key.begin(), ::tolower );
-		
-		if( !parseOption( key,value, header ) ){
-			printError("unknown option");
-			printError( key.c_str() );
-		}
-
-		request = match.suffix().str();
-	}
-
 	return true;
 }
 

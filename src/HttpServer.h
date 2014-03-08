@@ -35,11 +35,6 @@ protected:
 
 	virtual int sendString(SOCKET socket, const std::string &str);
 
-	virtual bool parseRequest(const std::string &request);
-	virtual bool parseOption(
-		const std::string &option,const std::string &value,
-		HttpRequest &header);
-
 	virtual std::string compileHeader(HttpResponse &response);
 	virtual bool sendResponse(
 		SOCKET socket,
