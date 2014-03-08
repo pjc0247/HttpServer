@@ -12,10 +12,7 @@ Router::Router(){
 Router::~Router(){
 }
 
-Router &Router::link(string &path, Router *router){
-	return link( move(path), router );
-}
-Router &Router::link(string &&path, Router *router){
+Router &Router::link(const string &path, Router *router){
 	assert( router != nullptr );
 	assert( path.empty() == false );
 

@@ -16,8 +16,7 @@ public:
 	Router();
 	virtual ~Router();
 
-	Router &link(std::string &path, Router *router);
-	Router &link(std::string &&path, Router *router);
+	Router &link(const std::string &path, Router *router);
 
 	virtual bool route(LocationIterator &it, HttpRequest &request);
 
