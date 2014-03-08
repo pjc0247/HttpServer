@@ -12,9 +12,11 @@ struct HttpResponse{
 	std::string server;
 	std::string connectionType;
 
+	std::string contentType;
+
 	std::string document;
 
 	unsigned long contentLength;
-}
+};
 
-#endif //_HTTP_RESPONSE_H
+# endif //_HTTP_RESPONSE_H

@@ -183,6 +183,10 @@ string HttpServer::compileHeader(HttpResponse &response){
 	/* Server */
 	header += "Server:" + response.server + CrLf;
 
+
+	/* Content-type */
+	header += "Content-type:" + response.contentType;
+
 	/* Content-length */
 	char contentLength[32];
 	sprintf(contentLength, "%ul", response.contentLength);
