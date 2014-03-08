@@ -31,7 +31,7 @@ void Router::setParent(Router *_parent){
 }
 
 bool Router::route(LocationIterator &it,HttpRequest &request){
-	if( it == request.location->end() ){
+	if( it == request.getLocation().end() ){
 		return false;
 	}
 
