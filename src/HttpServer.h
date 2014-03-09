@@ -35,10 +35,8 @@ protected:
 
 	virtual int sendString(SOCKET socket, const std::string &str);
 
-	virtual std::string compileHeader(HttpResponse &response);
 	virtual bool sendResponse(
-		SOCKET socket,
-		HttpResponseCode code, const std::string &document);
+		SOCKET socket, HttpResponse &response);
 	
 
 protected:

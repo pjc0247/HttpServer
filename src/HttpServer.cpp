@@ -16,8 +16,8 @@
 
 using namespace std;
 
-const char DoubleCrLf[] = "\r\n\r\n";
-const char CrLf[] = "\r\n";
+static const char DoubleCrLf[] = "\r\n\r\n";
+static const char CrLf[] = "\r\n";
 
 HttpServer::HttpServer(int port){
 	 
@@ -72,9 +72,11 @@ bool HttpServer::onConnect(ClientData client){
 	//if( ! request.empty() ){
 	HttpRequest header( request );
 
+	/*
 	sendResponse( 
 		client.socket,
 		HttpResponseCode::StatusOk, "<h1>it works!</h1>" );
+		*/
 	//}
 	/*
 	rootRouter.route(
@@ -83,58 +85,11 @@ bool HttpServer::onConnect(ClientData client){
 	return true;
 }
 
-string HttpServer::compileHeader(HttpResponse &response){
-	string header;
-
-	ReasonPhraseTable *ptable = ReasonPhraseTable::getInstance();
-
-	char status[8];
-	sprintf(status, "%d", response.status);
-
-	/* HttpVer / StatusCode / ReasonPhrase */
-	header += response.version + " ";
-	header += string(status) + " ";
-	header += ptable->getPhrase(response.status) + CrLf;
-
-
-	/* Server */
-	header += "Server:" + response.server + CrLf;
-
-
-	/* Content-type */
-	header += "Content-type:" + response.contentType;
-
-	/* Content-length */
-	char contentLength[32];
-	sprintf(contentLength, "%ul", response.contentLength);
-	header += "Content-length:" + string(contentLength) + CrLf;
-
-	/* Connection */
-	header += "Connection:" + response.connectionType + CrLf;
-
-
-	/* CrLf */
-	header += CrLf;
-
-	return header;
-}
 bool HttpServer::sendResponse(
-	SOCKET socket,
-	HttpResponseCode code, const string &document){
+	SOCKET socket, HttpResponse &response){
 
-
-	HttpResponse response;
-
-	response.server = getServerName();
-	response.contentLength = document.length();
-	response.status = HttpResponseCode::StatusOk;
-	response.version = HttpVersion11;
-	response.connectionType = "close";
-
-	auto header = compileHeader(response);
-
-	sendString( socket, header );
-	sendString( socket, document );
+	sendString( socket, response.getHeader() );
+	sendString( socket, response.getDocument() );
 
 	close( socket );
 
