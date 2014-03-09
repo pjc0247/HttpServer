@@ -5,7 +5,41 @@
 
 #include <string>
 
-struct HttpResponse{
+class HttpResponse{
+public:
+	HttpResponse();
+	virtual ~HttpResponse();
+
+
+	const std::string getHeader();
+
+	HttpResponseCode getStatusCode();
+	void setStatusCode(HttpResponseCode status);
+
+	const std::string &getHttpVersion();
+	void setHttpVersion(const std::string &httpver);
+
+	const std::string &getServerName();
+	void setServerName(const std::string &server);
+
+	const std::string &getConnectionType();
+	void setConnectionType(const std::string &connectionType);
+
+	const std::string &getContentType();
+	void setContentType(const std::string &contentType);
+
+	const std::string &getDocument();
+	void setDocument(const std::string &document);
+
+	unsigned long getContentLength();
+
+
+	bool compile();
+protected:
+
+protected:
+	std::string header;
+
 	HttpResponseCode status;
 
 	std::string version;
