@@ -9,8 +9,14 @@ using namespace std;
 HttpRequest::HttpRequest() :
 	location() {
 }
-HttpRequest::HttpRequest(const std::string &_header){
-	header = _header;
+HttpRequest::HttpRequest(const std::string &header){
+	setHeader( header );
+
+	parse();
+}
+HttpRequest::HttpRequest(const std::string &header,const string &document){
+	setHeader( header );
+	setDocument( document );
 
 	parse();
 }
@@ -90,6 +96,20 @@ bool HttpRequest::parseOption(const string &key,const string &value){
 		return false;
 
 	return true;
+}
+
+const string &HttpRequest::getHeader(){
+	return header;
+}
+void HttpRequest::setHeader(const string &_header){
+	header = _header;
+}
+
+const string &HttpRequest::getDocument(){
+	return document;
+}
+void HttpRequest::setDocument(const string &_document){
+	document = _document;
 }
 
 HttpMethod HttpRequest::getHttpMethod(){

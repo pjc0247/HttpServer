@@ -9,7 +9,11 @@ class HttpRequest{
 public:
 	HttpRequest();
 	HttpRequest(const std::string &header);
+	HttpRequest(const std::string &header, const std::string &document);
 	virtual ~HttpRequest();
+
+	const string &getHeader();
+	const string &getDocument();
 
 	HttpMethod getHttpMethod();
 	void setHttpMethod(HttpMethod method);
@@ -38,11 +42,15 @@ public:
 	void setAcceptLanguage(const std::string &acceptLanguage);
 
 protected:
+	void setHeader(const std::string &header);
+	void setDocument(const std::string &document);
+
 	bool parse();
 	bool parseOption(const std::string &key,const std::string &value);
 
 protected:
 	std::string header;
+	std::string document;
 
 	HttpMethod method;
 
