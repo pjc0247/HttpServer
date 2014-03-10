@@ -43,9 +43,11 @@ int HttpServer::sendString(SOCKET socket, const string &str){
 }
 
 bool HttpServer::onConnect(ClientData client){
-	string request;
+	string header;
+	string formData;
+	bool received = false;
 
-	while( true ){
+	while( !received ){
 		char buf[INBUF_SIZE+1];
 		int length = recv(client.socket, buf, INBUF_SIZE, false);
 
@@ -54,23 +56,41 @@ bool HttpServer::onConnect(ClientData client){
 
 		buf[length] = '\0';
 
-		request += buf;
+		header += buf;
 
 		/* \r\n\r\n 수신 -> 수신 종료 */
-		if( request.length() >= 4 &&
-			!strcmp(
-				request.c_str() + (request.length()-4),
-				DoubleCrLf) ){
-			break;
+		int headerLength = header.length();
+
+		if( headerLength >= 3 ){
+			const char *cstr = header.c_str();
+			int sidx = max( (headerLength - length) - 3, 0 );
+			int eidx = headerLength;
+
+			for(int i=sidx;i<eidx;i++){
+				int j;
+				for(j=0;j<4;j++){
+					if( cstr[i+j] != DoubleCrLf[j] )
+						break;
+				}
+
+				if( j == 4 ){
+					received = true;
+
+					formData = header.substr( i+4 );
+					header = header.erase( i+4 );
+
+					break;
+				}
+			}
 		}
 	}
 
-	//printf("\n\n%s|\n", request.c_str());
+	printf("\n\n%s|\n", header.c_str());
 
 	requestCounter.fetch_add(1);
 
 	//if( ! request.empty() ){
-	HttpRequest header( request );
+	HttpRequest request( header );
 
 	/*
 	sendResponse( 
@@ -98,7 +118,7 @@ bool HttpServer::sendResponse(
 
 void HttpServer::setServerName(const string &_serverName){
 	serverName = move( _serverName );
-}
+} 
 string &HttpServer::getServerName(){
 	return serverName;
 }
