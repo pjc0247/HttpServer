@@ -44,7 +44,7 @@ int HttpServer::sendString(SOCKET socket, const string &str){
 
 bool HttpServer::onConnect(ClientData client){
 	string header;
-	string formData;
+	string document;
 	bool received = false;
 
 	while( !received ){
@@ -76,7 +76,7 @@ bool HttpServer::onConnect(ClientData client){
 				if( j == 4 ){
 					received = true;
 
-					formData = header.substr( i+4 );
+					document = header.substr( i+4 );
 					header = header.erase( i+4 );
 
 					break;
