@@ -10,21 +10,26 @@ HttpRequest::HttpRequest() :
 	location() {
 }
 HttpRequest::HttpRequest(const std::string &header){
+	contentLength = 0;
+
 	setHeader( header );
 
-	parse();
+	parseHeader();
 }
 HttpRequest::HttpRequest(const std::string &header,const string &document){
+	contentLength = 0;
+
 	setHeader( header );
 	setDocument( document );
 
-	parse();
+	parseHeader();
+	parseDocument();
 }
 
 HttpRequest::~HttpRequest(){
 }
 
-bool HttpRequest::parse(){
+bool HttpRequest::parseHeader(){
 	regex expr("([a-zA-Z_-]*)\\s?:\\s?(.*)");
 	smatch match;
 	string request;
@@ -53,6 +58,10 @@ bool HttpRequest::parse(){
 		setHttpMethod( HttpMethod::HttpGet );
 	else if( method == "post" ) 
 		setHttpMethod( HttpMethod::HttpPost );
+	else if( method == "put" ) 
+		setHttpMethod( HttpMethod::HttpPut );
+	else if( method == "delete" ) 
+		setHttpMethod( HttpMethod::HttpDelete );
 
 	/* location */
 	location.setRequestURI( token[1] );
@@ -69,12 +78,26 @@ bool HttpRequest::parse(){
 		transform( key.begin(),key.end(),key.begin(), ::tolower );
 		
 		if( !parseOption( key,value ) ){
-			/* unknown option */ 
+			/* unknown option */
 		}
 
 		request = match.suffix().str();
 	}
 
+	return true;
+}
+bool HttpRequest::parseDocument(){
+	/* parse post form-data */
+	if( getHttpMethod() == HttpMethod::HttpPost ){
+		printf("%s\n", getContentType());
+		printf("%s\n", document.c_str() );
+	}
+	else{
+		return false;
+	}
+}
+
+bool HttpRequest::parse(){
 	return true;
 }
 bool HttpRequest::parseOption(const string &key,const string &value){
@@ -92,6 +115,13 @@ bool HttpRequest::parseOption(const string &key,const string &value){
 		setAcceptEncoding( value );
 	else if( key == "accept-language" )
 		setAcceptLanguage( value );
+	else if( key == "content-type" )
+		setContentType( value );
+	else if( key == "content-length" ){
+		unsigned long v;
+		sscanf( value.c_str(), "%ul", &v);
+		setContentLength( v );
+	}
 	else
 		return false;
 
@@ -170,4 +200,19 @@ const string &HttpRequest::getAcceptLanguage(){
 }
 void HttpRequest::setAcceptLanguage(const string &_acceptLanguage){
 	acceptLanguage = _acceptLanguage;
+}
+
+void HttpRequest::setContentLength(unsigned long _contentLength){
+	contentLength = _contentLength;
+}
+
+const string &HttpRequest::getContentType(){
+	return contentType;
+}
+void HttpRequest::setContentType(const string &_contentType){
+	contentType = _contentType;
+}
+
+unsigned long HttpRequest::getContentLength(){
+	return document.length();
 }

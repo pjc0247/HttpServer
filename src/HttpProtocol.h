@@ -5,7 +5,10 @@
 
 enum HttpMethod{
 	HttpGet,
-	HttpPost
+	HttpPost,
+
+	HttpPut,
+	HttpDelete
 };
 
 enum HttpResponseCode{
