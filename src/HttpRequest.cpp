@@ -51,6 +51,7 @@ bool HttpRequest::parseHeader(){
 			break;
 	}
 
+	/* method */
 	auto &method = token[0];
 	transform( method.begin(),method.end(), method.begin(), ::tolower );
 
