@@ -85,18 +85,52 @@ bool HttpServer::onConnect(ClientData client){
 		}
 	}
 
-	printf("\n\n%s|\n", header.c_str());
-
 	requestCounter.fetch_add(1);
 
 	//if( ! request.empty() ){
 	HttpRequest request( header );
 
-	/*
+	unsigned long targetLength = request.getContentLength();
+	received = false;
+
+	if( targetLength > 0 ){
+
+		while( !received ){
+			char buf[INBUF_SIZE+1];
+			int length = recv(client.socket, buf, INBUF_SIZE, false);
+
+			/* 클라이언트로부터 연결 끊김 */
+			if( length == -1 ) break;
+
+			buf[length] = '\0';
+
+			document += buf;
+
+			if( document.length() >= targetLength ){
+				received = true;
+			}
+		}
+		
+		//printf("contentLEngth : %lu\n\n", request.getContentLength());
+		//printf("%s\n", document.c_str() );
+	}
+
+	HttpResponse response;
+
+	response.setConnectionType("close");
+	response.setHttpVersion(HttpVersion11);
+	response.setStatusCode(HttpResponseCode::StatusOk);
+	response.setServerName("hi");
+	response.compile();
+
+	//printf("%s\n", request.getHeader());
+	response.setDocument("<h1>hi</h1>");
+	
 	sendResponse( 
 		client.socket,
-		HttpResponseCode::StatusOk, "<h1>it works!</h1>" );
-		*/
+		response);
+		//HttpResponseCode::StatusOk, "<h1>it works!</h1>" );
+		
 	//}
 	/*
 	rootRouter.route(
