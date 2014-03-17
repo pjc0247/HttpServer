@@ -24,6 +24,19 @@ public:
 		return pair->second;
 	}
 
+	typename std::unordered_map<std::string,T>::iterator begin(){
+		return container.begin();
+	}
+	typename std::unordered_map<std::string,T>::iterator end(){
+		return container.end();
+	}
+	typename const std::unordered_map<std::string,T>::iterator cbegin(){
+		return container.cbegin();
+	}
+	typename const std::unordered_map<std::string,T>::iterator cend(){
+		return container.cend();
+	}
+
 	static T novalue;
 
 protected:
