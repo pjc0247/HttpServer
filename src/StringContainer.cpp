@@ -25,6 +25,10 @@ bool StringContainer::load(const std::string &str){
 
 			set( key, value );
 		}
+		// ignore whitespace
+		else if( str[i] == ' ' ){
+			offset ++;
+		}
 	}
 
 	if( offset != length ){
