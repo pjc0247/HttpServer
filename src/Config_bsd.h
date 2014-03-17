@@ -7,6 +7,8 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
+#include <unistd.h>
+
 typedef unsigned int SOCKET;
 typedef sockaddr_in SOCKADDR_IN;
 typedef sockaddr SOCKADDR;
