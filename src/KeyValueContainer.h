@@ -15,7 +15,7 @@ public:
 	void set(const std::string &key,const T &value){
 		container[ key ] = value;
 	}
-	const std::string &get(const T &key){
+	const T &get(const std::string &key){
 		auto pair = container.find( key );
 
 		if( pair == container.end() )
