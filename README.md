@@ -1,6 +1,6 @@
 HttpServer
 ==========
 
-light-weight c++ http server<br
+light-weight c++ http server
 <br>
-__This project is not working, please see [new version](https://github.com/pjc0247/HttpServer.cs).__
+__This project is not a production level http server.__
